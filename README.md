@@ -14,7 +14,7 @@ Open `scenarios.html` in any browser. Pick a scenario:
 ## Files
 
 - `scenarios.html` - Interactive calculator (just open in browser)
-- `scenarios.py` - Python script that generates the static HTML tables
+- `makescenarios.py` - Python script that generates the static HTML tables
 
 ## Current Stats (before PAK vs SL)
 
