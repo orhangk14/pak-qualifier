@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qudrat Calculator - Designed by Orhan Ghazi Khan</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body {
+        background: #0a1628;
+        color: #e0e0e0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        padding: 20px;
+        min-height: 100vh;
+    }
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    .header {
+        text-align: center;
+        padding: 30px 20px;
+        background: linear-gradient(135deg, #01411C, #1B5E20);
+        border-radius: 16px;
+        margin-bottom: 24px;
+    }
+    .header h1 {
+        font-size: 24px;
+        color: #fff;
+        margin-bottom: 6px;
+    }
+    .header .subtitle {
+        color: #a5d6a7;
+        font-size: 14px;
+    }
+    .nrr-bar {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+        margin-bottom: 24px;
+    }
+    .nrr-item {
+        background: #1a2332;
+        border-radius: 12px;
+        padding: 14px 24px;
+        text-align: center;
+        border: 1px solid #2a3a4a;
+    }
+    .nrr-item .label {
+        font-size: 11px;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .nrr-item .value {
+        font-size: 20px;
+        font-weight: bold;
+        margin-top: 4px;
+    }
+    .negative { color: #ef5350; }
+    .positive { color: #66bb6a; }
+
+    .tabs {
+        display: flex;
+        gap: 0;
+        margin-bottom: 24px;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 2px solid #2a3a4a;
+    }
+    .tab {
+        flex: 1;
+        padding: 16px;
+        text-align: center;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+        background: #1a2332;
+        transition: all 0.2s;
+        border: none;
+        color: #888;
+    }
+    .tab:hover {
+        background: #1e2d3d;
+    }
+    .tab.active {
+        background: #01411C;
+        color: #fff;
+    }
+
+    .input-section {
+        background: #1a2332;
+        border-radius: 16px;
+        padding: 24px;
+        border: 1px solid #2a3a4a;
+        margin-bottom: 24px;
+    }
+    .input-section label {
+        display: block;
+        font-size: 14px;
+        color: #888;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .input-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    input[type="number"] {
+        flex: 1;
+        background: #0d2137;
+        border: 2px solid #2a3a4a;
+        border-radius: 10px;
+        padding: 14px 16px;
+        font-size: 24px;
+        font-weight: bold;
+        color: #fff;
+        text-align: center;
+        outline: none;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+    }
+    input[type="number"]:focus {
+        border-color: #66bb6a;
+    }
+    .input-hint {
+        font-size: 12px;
+        color: #555;
+        margin-top: 8px;
+    }
+
+    .result {
+        background: #1a2332;
+        border-radius: 16px;
+        padding: 28px;
+        border: 1px solid #2a3a4a;
+        text-align: center;
+        display: none;
+    }
+    .result.visible {
+        display: block;
+    }
+    .result-label {
+        font-size: 13px;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+    }
+    .result-value {
+        font-size: 36px;
+        font-weight: bold;
+        color: #66bb6a;
+        margin-bottom: 4px;
+    }
+    .result-detail {
+        font-size: 15px;
+        color: #ccc;
+        margin-top: 12px;
+        line-height: 1.6;
+    }
+    .result-nrr {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #2a3a4a;
+        font-size: 14px;
+        color: #888;
+    }
+    .result-nrr span {
+        color: #66bb6a;
+        font-weight: bold;
+    }
+    .impossible {
+        color: #ef5350;
+    }
+    .tight {
+        color: #ffa726;
+    }
+
+    .footer {
+        text-align: center;
+        padding: 20px;
+        color: #444;
+        font-size: 12px;
+        margin-top: 12px;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>🇵🇰 Qudrat Calculator</h1>
+        <div style="font-size:12px; color:#a5d6a7; margin-top:6px;">Designed by Orhan Ghazi Khan</div>
+        <div class="subtitle">T20 World Cup 2026 • Group 2 • vs Sri Lanka</div>
+    </div>
+
+    <div class="nrr-bar">
+        <div class="nrr-item">
+            <div class="label">PAK Current NRR</div>
+            <div class="value negative" id="currentNrr"></div>
+        </div>
+        <div class="nrr-item">
+            <div class="label">Need to Beat (NZ)</div>
+            <div class="value positive">+1.390</div>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" onclick="setScenario('batFirst')">🏏 PAK Bats First</button>
+        <button class="tab" onclick="setScenario('chase')">🏃 PAK Chases</button>
+    </div>
+
+    <!-- BAT FIRST INPUT -->
+    <div class="input-section" id="batFirstInput">
+        <label>Pakistan's First Innings Score</label>
+        <div class="input-row">
+            <input type="number" id="pakScore" placeholder="150" min="50" max="300" oninput="calculate()">
+        </div>
+        <div class="input-hint">Enter Pakistan's total after batting 20 overs</div>
+    </div>
+
+    <!-- CHASE INPUT -->
+    <div class="input-section" id="chaseInput" style="display:none;">
+        <label>Sri Lanka's First Innings Score</label>
+        <div class="input-row">
+            <input type="number" id="slScore" placeholder="140" min="30" max="300" oninput="calculate()">
+        </div>
+        <div class="input-hint">Enter Sri Lanka's total after batting 20 overs</div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="result" id="result"></div>
+
+    <div class="footer">
+        Pakistan must WIN and finish with NRR above +1.390 to qualify ahead of New Zealand
+    </div>
+
+</div>
+
+<script>
+    // Pakistan's current stats before SL game
+    const PAK_RUNS_FOR = 164;
+    const PAK_OVERS_FOR = 20.0;
+    const PAK_RUNS_AGAINST = 166;
+    const PAK_OVERS_AGAINST = 19.1;
+    const NZ_NRR = 1.390;
+
+    let currentScenario = 'batFirst';
+
+    function oversToDecimal(overs) {
+        const whole = Math.floor(overs);
+        const balls = Math.round((overs - whole) * 10);
+        return whole + balls / 6.0;
+    }
+
+    function ballsToOversDisplay(balls) {
+        const overs = Math.floor(balls / 6);
+        const remaining = balls % 6;
+        return overs + '.' + remaining;
+    }
+
+    function calcNrr(runsFor, oversFor, runsAgainst, oversAgainst) {
+        const decFor = oversToDecimal(oversFor);
+        const decAgainst = oversToDecimal(oversAgainst);
+        return (runsFor / decFor) - (runsAgainst / decAgainst);
+    }
+
+    // Show current NRR on load
+    const currentNrr = calcNrr(PAK_RUNS_FOR, PAK_OVERS_FOR, PAK_RUNS_AGAINST, PAK_OVERS_AGAINST);
+    document.getElementById('currentNrr').textContent = (currentNrr >= 0 ? '+' : '') + currentNrr.toFixed(3);
+
+    function setScenario(scenario) {
+        currentScenario = scenario;
+
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+
+        if (scenario === 'batFirst') {
+            document.querySelectorAll('.tab')[0].classList.add('active');
+            document.getElementById('batFirstInput').style.display = 'block';
+            document.getElementById('chaseInput').style.display = 'none';
+        } else {
+            document.querySelectorAll('.tab')[1].classList.add('active');
+            document.getElementById('batFirstInput').style.display = 'none';
+            document.getElementById('chaseInput').style.display = 'block';
+        }
+
+        document.getElementById('result').classList.remove('visible');
+        calculate();
+    }
+
+    function calculate() {
+        const resultDiv = document.getElementById('result');
+
+        if (currentScenario === 'batFirst') {
+            calculateBatFirst(resultDiv);
+        } else {
+            calculateChase(resultDiv);
+        }
+    }
+
+    function calculateBatFirst(resultDiv) {
+        const pakScore = parseInt(document.getElementById('pakScore').value);
+        if (!pakScore || pakScore < 1) {
+            resultDiv.classList.remove('visible');
+            return;
+        }
+
+        // Find max SL score where PAK still qualifies
+        // SL bats full 20 overs (worst case)
+        let maxSlScore = -1;
+        let qualifyNrr = 0;
+
+        for (let sl = pakScore - 1; sl >= 0; sl--) {
+            const totalFor = PAK_RUNS_FOR + pakScore;
+            const totalOversFor = 20.0 + 20.0;
+            const totalAgainst = PAK_RUNS_AGAINST + sl;
+            const totalOversAgainst = 19.1 + 20.0;
+
+            const nrr = calcNrr(totalFor, totalOversFor, totalAgainst, totalOversAgainst);
+
+            if (nrr > NZ_NRR) {
+                maxSlScore = sl;
+                qualifyNrr = nrr;
+                break;
+            }
+        }
+
+        if (maxSlScore < 0) {
+            resultDiv.innerHTML = `
+                <div class="result-label">Result</div>
+                <div class="result-value impossible">IMPOSSIBLE</div>
+                <div class="result-detail">
+                    Even bowling Sri Lanka out for 0, Pakistan cannot reach the required NRR with a score of ${pakScore}
+                </div>
+            `;
+        } else {
+            const margin = pakScore - maxSlScore;
+            let difficultyClass = '';
+            let difficultyText = '';
+
+            if (margin > 80) {
+                difficultyClass = 'impossible';
+                difficultyText = 'Extremely difficult';
+            } else if (margin > 50) {
+                difficultyClass = 'tight';
+                difficultyText = 'Very challenging';
+            } else if (margin > 30) {
+                difficultyClass = 'tight';
+                difficultyText = 'Tough but possible';
+            } else {
+                difficultyClass = 'positive';
+                difficultyText = 'Achievable';
+            }
+
+            resultDiv.innerHTML = `
+                <div class="result-label">Sri Lanka must be restricted under</div>
+                <div class="result-value">${maxSlScore} runs</div>
+                <div class="result-detail">
+                    Pakistan scores <strong>${pakScore}</strong>, needs to win by at least <strong>${margin} runs</strong>
+                    <br>Win by at least <strong>${margin} runs</strong>
+                </div>
+                <div class="result-nrr">
+                    New NRR: <span>+${qualifyNrr.toFixed(3)}</span> (need above +1.390)
+                </div>
+            `;
+        }
+
+        resultDiv.classList.add('visible');
+    }
+
+    function calculateChase(resultDiv) {
+        const slScore = parseInt(document.getElementById('slScore').value);
+        if (!slScore || slScore < 1) {
+            resultDiv.classList.remove('visible');
+            return;
+        }
+
+        const pakChase = slScore + 1;
+
+        // Find max overs Pakistan can take to chase
+        let maxBalls = -1;
+        let qualifyNrr = 0;
+
+        for (let balls = 120; balls >= 1; balls--) {
+            const chaseOversRaw = parseFloat(ballsToOversDisplay(balls));
+
+            const totalFor = PAK_RUNS_FOR + pakChase;
+            const totalOversFor = 20.0 + chaseOversRaw;
+            const totalAgainst = PAK_RUNS_AGAINST + slScore;
+            const totalOversAgainst = 19.1 + 20.0;
+
+            const nrr = calcNrr(totalFor, totalOversFor, totalAgainst, totalOversAgainst);
+
+            if (nrr > NZ_NRR) {
+                maxBalls = balls;
+                qualifyNrr = nrr;
+                break;
+            }
+        }
+
+        if (maxBalls < 0) {
+            // Try with bigger chase scores
+            let found = false;
+            for (let extra = 2; extra <= 150; extra++) {
+                const bigChase = slScore + extra;
+                for (let balls = 120; balls >= 1; balls--) {
+                    const chaseOversRaw = parseFloat(ballsToOversDisplay(balls));
+
+                    const totalFor = PAK_RUNS_FOR + bigChase;
+                    const totalOversFor = 20.0 + chaseOversRaw;
+                    const totalAgainst = PAK_RUNS_AGAINST + slScore;
+                    const totalOversAgainst = 19.1 + 20.0;
+
+                    const nrr = calcNrr(totalFor, totalOversFor, totalAgainst, totalOversAgainst);
+
+                    if (nrr > NZ_NRR) {
+                        const oversDisplay = ballsToOversDisplay(balls);
+
+                        resultDiv.innerHTML = `
+                            <div class="result-label">Pakistan needs to chase within</div>
+                            <div class="result-value">${oversDisplay} overs</div>
+                            <div class="result-detail">
+                                Sri Lanka posts <strong>${slScore}</strong>, Pakistan must score <strong>${bigChase}</strong> in <strong>${oversDisplay} overs</strong>
+                                <br><span class="tight">Need to outscore the target by ${extra - 1} extra runs</span>
+                            </div>
+                            <div class="result-nrr">
+                                New NRR: <span>+${nrr.toFixed(3)}</span> (need above +1.390)
+                            </div>
+                        `;
+                        resultDiv.classList.add('visible');
+                        found = true;
+                        break;
+                    }
+                }
+                if (found) break;
+            }
+
+            if (!found) {
+                resultDiv.innerHTML = `
+                    <div class="result-label">Result</div>
+                    <div class="result-value impossible">IMPOSSIBLE</div>
+                    <div class="result-detail">Cannot reach the required NRR chasing ${slScore}</div>
+                `;
+                resultDiv.classList.add('visible');
+            }
+        } else {
+            const oversDisplay = ballsToOversDisplay(maxBalls);
+            const oversDecimal = oversToDecimal(parseFloat(oversDisplay));
+
+            let difficultyClass = '';
+            let difficultyText = '';
+
+            if (maxBalls <= 30) {
+                difficultyClass = 'impossible';
+                difficultyText = 'Nearly impossible';
+            } else if (maxBalls <= 54) {
+                difficultyClass = 'tight';
+                difficultyText = 'Very tight';
+            } else if (maxBalls <= 78) {
+                difficultyClass = 'tight';
+                difficultyText = 'Challenging';
+            } else {
+                difficultyClass = 'positive';
+                difficultyText = 'Comfortable';
+            }
+
+            resultDiv.innerHTML = `
+                <div class="result-label">Pakistan must chase within</div>
+                <div class="result-value">${oversDisplay} overs</div>
+                <div class="result-detail">
+                    Sri Lanka posts <strong>${slScore}</strong>, Pakistan chases <strong>${pakChase}</strong> within <strong>${oversDisplay} overs</strong>
+                    <br>Must finish the chase in <strong>${oversDisplay} overs</strong>
+                </div>
+                <div class="result-nrr">
+                    New NRR: <span>+${qualifyNrr.toFixed(3)}</span> (need above +1.390)
+                </div>
+            `;
+            resultDiv.classList.add('visible');
+        }
+    }
+</script>
+</body>
+</html>
