@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAK vs SL - Live Qualification Tracker</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        background: #0a1628;
+        color: #e0e0e0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        padding: 20px;
+        min-height: 100vh;
+    }
+    .container { max-width: 600px; margin: 0 auto; }
+    .header {
+        text-align: center;
+        padding: 24px;
+        background: linear-gradient(135deg, #01411C, #1B5E20);
+        border-radius: 16px;
+        margin-bottom: 20px;
+    }
+    .header h1 { font-size: 22px; color: #fff; }
+    .header .sub { color: #a5d6a7; font-size: 13px; margin-top: 4px; }
+    .live-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background: #ef5350;
+        border-radius: 50%;
+        margin-right: 6px;
+        animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.3; }
+        100% { opacity: 1; }
+    }
+    .score-card {
+        background: #1a2332;
+        border-radius: 16px;
+        padding: 24px;
+        border: 1px solid #2a3a4a;
+        margin-bottom: 16px;
+        text-align: center;
+    }
+    .team-name { font-size: 14px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+    .score-big { font-size: 48px; font-weight: bold; color: #fff; margin: 8px 0; }
+    .overs { font-size: 16px; color: #888; }
+    .target-box {
+        background: linear-gradient(135deg, #1a2332, #0d2137);
+        border-radius: 16px;
+        padding: 28px;
+        border: 2px solid #01411C;
+        margin-bottom: 16px;
+        text-align: center;
+    }
+    .target-box .label {
+        font-size: 13px;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 8px;
+    }
+    .target-box .big-number {
+        font-size: 56px;
+        font-weight: bold;
+        color: #66bb6a;
+    }
+    .target-box .detail {
+        font-size: 15px;
+        color: #a5d6a7;
+        margin-top: 8px;
+    }
+    .equation-card {
+        background: #1a2332;
+        border-radius: 16px;
+        padding: 24px;
+        border: 1px solid #2a3a4a;
+        margin-bottom: 16px;
+    }
+    .equation-card h2 {
+        font-size: 14px;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 16px;
+        text-align: center;
+    }
+    .stat-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+    .stat {
+        background: #0d2137;
+        border-radius: 12px;
+        padding: 16px;
+        text-align: center;
+    }
+    .stat .label {
+        font-size: 11px;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .stat .value {
+        font-size: 24px;
+        font-weight: bold;
+        margin-top: 4px;
+    }
+    .positive { color: #66bb6a; }
+    .negative { color: #ef5350; }
+    .warning { color: #ffa726; }
+    .neutral { color: #fff; }
+    .refresh-bar {
+        text-align: center;
+        color: #444;
+        font-size: 12px;
+        margin-bottom: 16px;
+    }
+    .footer {
+        text-align: center;
+        color: #444;
+        font-size: 12px;
+        margin-top: 8px;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1><span class="live-dot"></span> Qudrat ka Nizam - LIVE</h1>
+        <div class="sub">PAK vs SL • T20 World Cup 2026 • Super 8</div>
+    </div>
+
+    <div class="refresh-bar" id="refreshBar">Loading...</div>
+
+    <div class="score-card">
+        <div class="team-name">🇵🇰 Pakistan (Batted First)</div>
+        <div class="score-big" id="pakScore">--</div>
+        <div class="overs" id="pakOvers">--</div>
+    </div>
+
+    <div class="score-card">
+        <div class="team-name" id="slTitle">🇱🇰 Sri Lanka (Chasing)</div>
+        <div class="score-big" id="slScore">--</div>
+        <div class="overs" id="slOvers">--</div>
+    </div>
+
+    <div class="target-box">
+        <div class="label">To Qualify, Pakistan Must Restrict SL To</div>
+        <div class="big-number">147 or less</div>
+        <div class="detail">SL can score max 147 in 20 overs for PAK to go through</div>
+    </div>
+
+    <div class="equation-card">
+        <h2>Qualification Equation</h2>
+        <div class="stat-grid">
+            <div class="stat">
+                <div class="label">SL Currently</div>
+                <div class="value neutral" id="slCurrent">--</div>
+            </div>
+            <div class="stat">
+                <div class="label">SL Can Still Score</div>
+                <div class="value neutral" id="runsLeft">--</div>
+            </div>
+            <div class="stat">
+                <div class="label">SL Current RR</div>
+                <div class="value neutral" id="currentRR">--</div>
+            </div>
+            <div class="stat">
+                <div class="label">Balls Remaining</div>
+                <div class="value neutral" id="ballsLeft">--</div>
+            </div>
+            <div class="stat">
+                <div class="label">RR SL Need To Knock PAK Out</div>
+                <div class="value neutral" id="dangerRR">--</div>
+            </div>
+            <div class="stat">
+                <div class="label">Status</div>
+                <div class="value positive" id="status">--</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">Designed by Orhan Ghazi Khan</div>
+
+</div>
+
+<script>
+    const REFRESH_SECONDS = 30;
+    const QUALIFY_MAX_SL = 147;
+
+    function oversToBalls(overs) {
+        const whole = Math.floor(overs);
+        const partial = Math.round((overs - whole) * 10);
+        return whole * 6 + partial;
+    }
+
+    function parseOvers(o) {
+        return parseFloat(o) || 0;
+    }
+
+    async function fetchAndUpdate() {
+        try {
+            const response = await fetch('/.netlify/functions/score');
+            const data = await response.json();
+
+            if (data.status !== 'success') {
+                document.getElementById('refreshBar').textContent = 'API error. Retrying...';
+                return;
+            }
+
+            const match = data.data;
+            const scores = match.score || [];
+
+            let pakRuns = 0, pakWickets = 0, pakOvers = 0;
+            let slRuns = 0, slWickets = 0, slOvers = 0;
+
+            for (const inning of scores) {
+                const name = inning.inning.toLowerCase();
+                if (name.includes('pakistan')) {
+                    pakRuns = inning.r || 0;
+                    pakWickets = inning.w || 0;
+                    pakOvers = parseOvers(inning.o);
+                } else if (name.includes('sri lanka')) {
+                    slRuns = inning.r || 0;
+                    slWickets = inning.w || 0;
+                    slOvers = parseOvers(inning.o);
+                }
+            }
+
+            const slTotalBalls = oversToBalls(slOvers);
+            const ballsRemaining = 120 - slTotalBalls;
+            const runsCanStillScore = QUALIFY_MAX_SL - slRuns;
+
+            document.getElementById('pakScore').textContent = pakRuns + '/' + pakWickets;
+            document.getElementById('pakOvers').textContent = pakOvers.toFixed(1) + ' overs';
+            document.getElementById('slTitle').textContent = '🇱🇰 Sri Lanka (Chasing ' + (pakRuns + 1) + ')';
+            document.getElementById('slScore').textContent = slRuns + '/' + slWickets;
+            document.getElementById('slOvers').textContent = slOvers + ' overs';
+
+            const currentRR = slTotalBalls > 0 ? (slRuns / (slTotalBalls / 6)).toFixed(2) : '0.00';
+
+            document.getElementById('slCurrent').textContent = slRuns + '/' + slWickets;
+            document.getElementById('ballsLeft').textContent = ballsRemaining;
+            document.getElementById('currentRR').textContent = currentRR;
+
+            const runsLeftEl = document.getElementById('runsLeft');
+            if (runsCanStillScore > 0) {
+                runsLeftEl.textContent = runsCanStillScore;
+                runsLeftEl.className = 'value positive';
+            } else {
+                runsLeftEl.textContent = 'CROSSED';
+                runsLeftEl.className = 'value negative';
+            }
+
+            const dangerEl = document.getElementById('dangerRR');
+            if (runsCanStillScore <= 0) {
+                dangerEl.textContent = 'DONE';
+                dangerEl.className = 'value negative';
+            } else if (ballsRemaining > 0) {
+                const runsToKnockOut = QUALIFY_MAX_SL - slRuns + 1;
+                const dangerRR = (runsToKnockOut / (ballsRemaining / 6)).toFixed(2);
+                dangerEl.textContent = dangerRR;
+                if (parseFloat(dangerRR) > 12) {
+                    dangerEl.className = 'value positive';
+                } else if (parseFloat(dangerRR) > 8) {
+                    dangerEl.className = 'value warning';
+                } else {
+                    dangerEl.className = 'value negative';
+                }
+            } else {
+                dangerEl.textContent = '∞';
+                dangerEl.className = 'value positive';
+            }
+
+            const statusEl = document.getElementById('status');
+            const matchEnded = match.matchEnded;
+
+            if (slRuns > QUALIFY_MAX_SL) {
+                statusEl.textContent = '❌ OUT';
+                statusEl.className = 'value negative';
+            } else if (matchEnded || slWickets >= 10 || ballsRemaining <= 0) {
+                if (slRuns <= QUALIFY_MAX_SL) {
+                    statusEl.textContent = '✅ THROUGH';
+                    statusEl.className = 'value positive';
+                } else {
+                    statusEl.textContent = '❌ OUT';
+                    statusEl.className = 'value negative';
+                }
+            } else if (slRuns > QUALIFY_MAX_SL - 20) {
+                statusEl.textContent = '⚠️ TIGHT';
+                statusEl.className = 'value warning';
+            } else {
+                statusEl.textContent = '🟢 SAFE';
+                statusEl.className = 'value positive';
+            }
+
+            const now = new Date();
+            document.getElementById('refreshBar').textContent = 'Last updated: ' + now.toLocaleTimeString() + ' • Refreshes every ' + REFRESH_SECONDS + 's';
+
+        } catch (err) {
+            document.getElementById('refreshBar').textContent = 'Error fetching. Retrying in ' + REFRESH_SECONDS + 's...';
+            console.error(err);
+        }
+    }
+
+    fetchAndUpdate();
+    setInterval(fetchAndUpdate, REFRESH_SECONDS * 1000);
+</script>
+</body>
+</html>
