@@ -479,6 +479,7 @@
                 <div class="result-detail">
                     Sri Lanka posts <strong>${slScore}</strong>, Pakistan chases <strong>${pakChase}</strong> within <strong>${oversDisplay} overs</strong>
                     <br>Must finish the chase in <strong>${oversDisplay} overs</strong>
+                    <br>Required run rate: <strong>${(pakChase / oversToDecimal(parseFloat(oversDisplay))).toFixed(2)}</strong> per over
                 </div>
                 <div class="result-nrr">
                     New NRR: <span>+${qualifyNrr.toFixed(3)}</span> (need above +1.390)
